@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kenakamu <kenakamu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/28 14:54:57 by kenakamu          #+#    #+#             */
-/*   Updated: 2025/02/28 15:50:38 by kenakamu         ###   ########.fr       */
+/*   Created: 2025/03/11 22:35:39 by kenakamu          #+#    #+#             */
+/*   Updated: 2025/04/03 03:00:12 by kenakamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,15 @@
 # endif 
 
 # include <stdio.h>
+
 # include <unistd.h>
+# include <stdlib.h>
 # include <sys/time.h>
+
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+size_t	ft_strlen(const char *s);
+char	*ft_strchr(const char *s, int c);
+char    *ft_strjoin(const char *s1, const char *s2);
 
 char	*get_next_line(int fd);
 
