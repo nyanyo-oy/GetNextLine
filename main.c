@@ -6,22 +6,25 @@
 int	main(void)
 {
 	int	fd;
-	char	*res = NULL;
+	char	*line = NULL;
 
 	dprintf(2, "main開始\n");
 	fd = open("example.txt", O_RDONLY);
 	dprintf(2, "file_opened:fd=%d\n", fd);
+
 	if(fd == -1)
 	{
 		dprintf(2, "fd_errored\n");
 		return (-1);
 	}
-	res = get_next_line(fd);	
-	dprintf(2, "gnl_returned:p=%p\n", (void *)res);
-	printf("%s\n", res);
-	free(res);
-	close(fd);
 
+	line = get_next_line(fd);
+		dprintf(2, "%p\n", (void *)line);
+
+		printf("%s\n", line);
+		free(line);
+	
+	close(fd);
 	return(0);
 }
 

@@ -31,13 +31,18 @@ size_t	ft_strlen(const char *s)
 {
 	const char	*s0 = s;
 
+	if(!s)
+		return (0);
+
 	while (*s)
 		s++;	
 	return (s - s0);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*strchr_ns(const char *s, int c)
 {
+	if(!s)
+		return (NULL);
 	while(*s != (char)c)
 	{
 		if (!*s)

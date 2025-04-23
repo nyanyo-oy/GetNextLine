@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/kensei/Documents/42tokyo/GetNextLine/single_fd",
+      "program": "/Users/kensei/Documents/42tokyo/GetNextLine/single_fd/build/Debug/outDebug"
+    }
+  ]
+}
