@@ -1,4 +1,3 @@
-/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
@@ -15,7 +14,7 @@
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
-# endif 
+# endif
 
 # include <stdio.h>
 

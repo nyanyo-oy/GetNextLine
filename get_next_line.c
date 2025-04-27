@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
+#include <stdio.h>
+#include <string.h>
 
 static char	*read_fd(int fd, char *save)
 {
@@ -38,7 +39,7 @@ static char	*read_fd(int fd, char *save)
 		bytes_read = read(fd, tmp, BUFFER_SIZE);
 
 		if (bytes_read < 0){
-			dprintf(2, "read error occured%s\n", save);
+			dprintf(2, "read error occured\n");
 			free (save);
 			free (tmp);
 			return (NULL);//bytes_readが0の場合　
@@ -59,7 +60,7 @@ static char	*read_fd(int fd, char *save)
 			break;//save内に\nが含まれる時break
 		}
 	}
-	
+
 	free(tmp);
 	return (save);
 }
@@ -92,33 +93,37 @@ static char	*save_next(char *save)
 	size_t	len;
 
 	s0 = strchr_ns(s0, '\n');
-	if (s0)
-		len = (s0 - save) + 1;
-	else
-		len = ft_strlen(save);
-	re_save = malloc(sizeof(char) * (len + 1));
-	if (!re_save)
-		return (NULL);
-	(void)ft_strlcpy(re_save, save, len + 1);
-	free(save);
-	return (re_save);
+	if (s0){
+		s0++;
+		len = ft_strlen(s0);
+		re_save = malloc(sizeof(char) * (len + 1));
+		if (!re_save)
+			return (NULL);
+		(void)ft_strlcpy(re_save, s0, len + 1);
+		free(save);
+		return (re_save);
+	}else{
+		free(save);
+		return(NULL);
+	}
 }
 
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*save = NULL;
+	static char	*save;
 
-	dprintf(2, "\nget_next_line starts\n");
+	dprintf(2, "\nget_next_line starts");
 	if (fd < 0 || BUFFER_SIZE <= 0)
 	{
 		return(NULL);
 	}
 	save = read_fd(fd, save);//saveに
-	dprintf(2, "read_fd_returned: p=%p s=%s\n", (void *)save, save);
+	// dprintf(2, "read_fd_returned: p=%p s=%s\n", (void *)save, save);
 	if (!save)
 		return (NULL);//saveだけなぜ？　freeはしなくていいのか(safe_freeのような実装も考がえる)
 	line = get_line(save);
 	save = save_next(save);
+	// dprintf(2, "save_next:%s", save);
 	return (line);
 }
