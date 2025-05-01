@@ -7,47 +7,29 @@ int	main(void)
 {
 	int	fd;
 	char	*line = NULL;
+	size_t count=0;
 
-	dprintf(2, "main開始\n");
-	fd = open("example.txt", O_RDONLY);
+	fd = open("example", O_RDONLY);
 
 	if(fd == -1)
 	{
 		dprintf(2, "fd_errored\n");
-		return (-1);
+		return (1);
 	}
 
-	size_t i= 10;
-	while(i)
+	while(1)
 	{
+		count++;
+		printf("%zu\n",count);
+		printf("-----------------------------------------------------\n");
 		line = get_next_line(fd);
-		printf("%siiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\n", line);
 		if(line == NULL){
 			printf ("line is NULL");
 			break;
 		}
-		printf("%zu\n",i);
+		printf("%s", line);
 		free(line);
-		i--;
 	}
-   	// line = get_next_line(fd);
-   	// printf("%siiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\n", line);
-   	// free(line);
-
-   	// line = get_next_line(fd);
-   	// printf("%siiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\n", line);
-   	// free(line);
-
-   	// line = get_next_line(fd);
-   	// printf("%siiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\n", line);
-   	// free(line);
-    // printf("NULL\n");
-
-   	// line = get_next_line(fd);
-   	// printf("%siiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\n", line);
-    // if (line == NULL)
-   	// 	printf("NULL");
-   	// free(line);
 
 	close(fd);
 	return(0);

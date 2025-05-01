@@ -12,6 +12,7 @@
 
 #include "get_next_line.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 static char	*read_fd(int fd, char *save)
@@ -20,7 +21,7 @@ static char	*read_fd(int fd, char *save)
 	char	*update_save;
 	ssize_t	bytes_read;
 
-	dprintf(2, "\nread_fd starts\n");
+	// dprintf(2, "\nread_fd starts\n");
 
 	if (!save){
 		save = malloc(1);
@@ -32,22 +33,22 @@ static char	*read_fd(int fd, char *save)
 	tmp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!tmp)
 		return (NULL);
-	dprintf(1, "read_fd malloc success\n");
+	// dprintf(1, "read_fd malloc success\n");
 
 	while (1)
 	{
 		bytes_read = read(fd, tmp, BUFFER_SIZE);
 
 		if (bytes_read < 0){
-			dprintf(2, "read error occured\n");
+			// dprintf(2, "read error occured\n");
 			free (save);
 			free (tmp);
 			return (NULL);//bytes_readが0の場合　
 		}
 
 		if (bytes_read == 0){
-			dprintf(2, "bytes_read is 0\n");
-			break;
+			// dprintf(2, "bytes_read is 0\n");
+			break ;
 		}
 
 		tmp[bytes_read] = '\0';//tmpにbytes_read番目のindexに終端文字を追加して(0indexのため+1分目を指す)文字列として閉じる
@@ -56,7 +57,7 @@ static char	*read_fd(int fd, char *save)
 		save = update_save;
 
 		if (strchr_ns(save, '\n')){
-			dprintf(2, "\\n found\n");
+			// dprintf(2, "\\n found\n");
 			break;//save内に\nが含まれる時break
 		}
 	}
@@ -71,9 +72,11 @@ static char	*get_line(char	*save)
 	const char	*s0 = save;
 	size_t		r_len;
 
-	if (!save)
+	// dprintf(2, "save:%s",save);
+	if (!save){
+		// dprintf(2, "get_line is NULL");
 		return (NULL);
-
+	}
 	s0 = strchr_ns(s0, '\n');//strchrでs0に何も入っていない場合 最後に\nを含む場合を分岐させる
 	if (s0)
 		r_len = (s0 - save) + 1;
@@ -103,8 +106,12 @@ static char	*save_next(char *save)
 		free(save);
 		return (re_save);
 	}else{
+		re_save = malloc(1);
+		if (!re_save)
+			return (NULL);
+		re_save[0] = '\0';
 		free(save);
-		return(NULL);
+		return(re_save);
 	}
 }
 
@@ -113,15 +120,18 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*save;
 
-	dprintf(2, "\nget_next_line starts");
+	// dprintf(2, "\nget_next_line starts");
 	if (fd < 0 || BUFFER_SIZE <= 0)
 	{
 		return(NULL);
 	}
 	save = read_fd(fd, save);//saveに
 	// dprintf(2, "read_fd_returned: p=%p s=%s\n", (void *)save, save);
-	if (!save)
-		return (NULL);//saveだけなぜ？　freeはしなくていいのか(safe_freeのような実装も考がえる)
+	if (!save || save[0] == '\0'){
+		free (save);
+		save = NULL;
+		return (NULL);
+	}
 	line = get_line(save);
 	save = save_next(save);
 	// dprintf(2, "save_next:%s", save);
