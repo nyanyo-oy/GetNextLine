@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kenakamu <kenakamu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/03 17:35:28 by kenakamu          #+#    #+#             */
-/*   Updated: 2025/05/08 17:02:04by kenakamu         ###   ########.fr       */
+/*   Created: 2025/05/08 19:07:55 by kenakamu          #+#    #+#             */
+/*   Updated: 2025/05/08 19:08:17 by kenakamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ char	*get_next_line(int fd)
 		save = NULL;
 		return (NULL);
 	}
-
 	line = get_line(save);
 	save = save_next(save);
 	return (line);
