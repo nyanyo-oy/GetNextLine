@@ -6,7 +6,7 @@
 /*   By: kenakamu <kenakamu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 17:35:28 by kenakamu          #+#    #+#             */
-/*   Updated: 2025/04/15 14:54:43 by kenakamu         ###   ########.fr       */
+/*   Updated: 2025/05/08 17:02:04by kenakamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,53 +15,36 @@
 #include <stdlib.h>
 #include <string.h>
 
+static char	*read_minus(char *s1, char *s2)
+{
+	free (s1);
+	free (s2);
+	return (NULL);
+}
+
 static char	*read_fd(int fd, char *save)
 {
 	char	*tmp;
 	char	*update_save;
 	ssize_t	bytes_read;
 
-	// dprintf(2, "\nread_fd starts\n");
-
-	if (!save){
-		save = malloc(1);
-		if (!save)
-			return (NULL);
-		save[0] = '\0';
-	}
-
 	tmp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!tmp)
 		return (NULL);
-	// dprintf(1, "read_fd malloc success\n");
-
 	while (1)
 	{
 		bytes_read = read(fd, tmp, BUFFER_SIZE);
-
-		if (bytes_read < 0){
-			// dprintf(2, "read error occured\n");
-			free (save);
-			free (tmp);
-			return (NULL);//bytes_readが0の場合　
-		}
-
-		if (bytes_read == 0){
-			// dprintf(2, "bytes_read is 0\n");
+		if (bytes_read < 0)
+			return (read_minus (save, tmp));
+		if (bytes_read == 0)
 			break ;
-		}
-
-		tmp[bytes_read] = '\0';//tmpにbytes_read番目のindexに終端文字を追加して(0indexのため+1分目を指す)文字列として閉じる
-		update_save = ft_strjoin(save, tmp);//saveにtmpを追加するstrjoinによって終端は保証される
+		tmp[bytes_read] = '\0';
+		update_save = ft_strjoin(save, tmp);
 		free (save);
 		save = update_save;
-
-		if (strchr_ns(save, '\n')){
-			// dprintf(2, "\\n found\n");
-			break;//save内に\nが含まれる時break
-		}
+		if (strchr_ns(save, '\n'))
+			break ;
 	}
-
 	free(tmp);
 	return (save);
 }
@@ -72,18 +55,15 @@ static char	*get_line(char	*save)
 	const char	*s0 = save;
 	size_t		r_len;
 
-	// dprintf(2, "save:%s",save);
-	if (!save){
-		// dprintf(2, "get_line is NULL");
+	if (!save)
 		return (NULL);
-	}
-	s0 = strchr_ns(s0, '\n');//strchrでs0に何も入っていない場合 最後に\nを含む場合を分岐させる
+	s0 = strchr_ns(s0, '\n');
 	if (s0)
 		r_len = (s0 - save) + 1;
 	else
 		r_len = ft_strlen(save);
 	rtn = malloc(sizeof(char) * (r_len + 1));
-	if(!rtn)
+	if (!rtn)
 		return (NULL);
 	(void)ft_strlcpy(rtn, save, r_len + 1);
 	return (rtn);
@@ -92,11 +72,12 @@ static char	*get_line(char	*save)
 static char	*save_next(char *save)
 {
 	const char	*s0 = save;
-	char	*re_save;
-	size_t	len;
+	char		*re_save;
+	size_t		len;
 
 	s0 = strchr_ns(s0, '\n');
-	if (s0){
+	if (s0)
+	{
 		s0++;
 		len = ft_strlen(s0);
 		re_save = malloc(sizeof(char) * (len + 1));
@@ -105,13 +86,15 @@ static char	*save_next(char *save)
 		(void)ft_strlcpy(re_save, s0, len + 1);
 		free(save);
 		return (re_save);
-	}else{
+	}
+	else
+	{
 		re_save = malloc(1);
 		if (!re_save)
 			return (NULL);
 		re_save[0] = '\0';
 		free(save);
-		return(re_save);
+		return (re_save);
 	}
 }
 
@@ -120,20 +103,24 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*save;
 
-	// dprintf(2, "\nget_next_line starts");
 	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (!save)
 	{
-		return(NULL);
+		save = malloc(1);
+		if (!save)
+			return (NULL);
+		save[0] = '\0';
 	}
-	save = read_fd(fd, save);//saveに
-	// dprintf(2, "read_fd_returned: p=%p s=%s\n", (void *)save, save);
-	if (!save || save[0] == '\0'){
+	save = read_fd(fd, save);
+	if (!save || save[0] == '\0')
+	{
 		free (save);
 		save = NULL;
 		return (NULL);
 	}
+
 	line = get_line(save);
 	save = save_next(save);
-	// dprintf(2, "save_next:%s", save);
 	return (line);
 }
